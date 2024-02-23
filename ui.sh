@@ -152,21 +152,6 @@ fight_nations() {
     fi
 }
 
-edit_map() {
-    echo "=== Edit Map ==="
-    read -p "Enter x-coordinate to edit: " x
-    read -p "Enter y-coordinate to edit: " y
-    select country in "${!countries[@]}"; do
-        if [[ -n $country ]]; then
-            map[$x,$y]="$country"
-            echo "Territory updated at coordinates ($x, $y) with $country"
-            break
-        else
-            echo "Invalid country selection. Please try again."
-        fi
-    done
-}
-
 check_gold_reserves() {
     read -p "Enter country name to check gold reserves: " country
     if [[ -n ${countries[$country]} ]]; then
@@ -197,6 +182,11 @@ tutorial() {
     echo "================"
 }
 
+edit_map() {
+    echo "Editing map..."
+    # Add code to allow editing the map (not implemented in this example)
+}
+
 play_as_nation() {
     echo "Select a country to play as:"
     select country in "${!countries[@]}"; do
@@ -222,6 +212,23 @@ rebellions() {
     done
 }
 
+spawn_rebellions() {
+    read -p "Enter the number of rebellions to spawn: " num_rebellions
+    for ((i=0; i<num_rebellions; i++)); do
+        rand_x=$((RANDOM % 3))
+        rand_y=$((RANDOM % 15))
+        old_country="${map[$rand_x,$rand_y]}"
+        new_country="${!countries[@]:RANDOM%${#countries[@]}:1}"
+        map[$rand_x,$rand_y]="$new_country"
+        echo "Rebellion spawned at coordinates ($rand_x, $rand_y)! $old_country has been replaced by $new_country."
+    done
+}
+
+next_turn() {
+    # Add code to progress to the next turn (not implemented in this example)
+    echo "Next turn!"
+}
+
 # Main script
 
 # Initialize map and countries
@@ -244,7 +251,9 @@ while $running; do
     echo "9. Tutorial"
     echo "10. Play as a Nation"
     echo "11. Check for Rebellions"
-    echo "12. Exit"
+    echo "12. Spawn Rebellions"
+    echo "13. Next Turn"
+    echo "14. Exit"
     echo "==========="
     read -p "Enter your choice: " choice
 
@@ -283,6 +292,12 @@ while $running; do
             rebellions
             ;;
         12)
+            spawn_rebellions
+            ;;
+        13)
+            next_turn
+            ;;
+        14)
             echo "Exiting the program."
             running=false
             ;;
